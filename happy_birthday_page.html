@@ -1,0 +1,377 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+  body {
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    cursor: none;
+    background: orange;
+    touch-action: none; /* Prevent scrolling on mobile */
+  }
+  
+  .particle {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    will-change: transform, opacity; /* Optimize animation performance */
+  }
+</style>
+
+<meta charset="UTF-8">
+  <title>Hbd</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Luckiest+Guy&family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+<script>
+  // Handle both mouse and touch events
+  function handleInteraction(x, y) {
+    createParticles(x, y);
+  }
+  
+  // Mouse movement
+  document.addEventListener('mousemove', (e) => {
+    handleInteraction(e.clientX, e.clientY);
+  });
+  
+  // Touch movement
+  document.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    if (e.touches.length > 0) {
+      handleInteraction(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  }, { passive: false });
+  
+  // Handle initial touch
+  document.addEventListener('touchstart', (e) => {
+    if (e.touches.length > 0) {
+      handleInteraction(e.touches[0].clientX, e.touches[0].clientY);
+    }
+  });
+
+  function createParticles(x, y) {
+    const particleCount = 12;
+    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+    
+    for (let i = 0; i < particleCount; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+      
+      // Add glow effect
+      particle.style.boxShadow = `0 0 ${Math.random() * 4 + 4}px currentColor`;
+      
+      document.body.appendChild(particle);
+      
+      const angle = Math.random() * Math.PI * 2;
+      const velocity = 2 + Math.random() * 3;
+      const lifetime = 500 + Math.random() * 500;
+      const size = 4 + Math.random() * 4;
+      
+      particle.style.width = particle.style.height = `${size}px`;
+      
+      let posX = x;
+      let posY = y;
+      let opacity = 1;
+      let scale = 1;
+      
+      const startTime = Date.now();
+      
+      const animate = () => {
+        const elapsed = Date.now() - startTime;
+        const progress = elapsed / lifetime;
+        
+        if (progress >= 1) {
+          particle.remove();
+          return;
+        }
+        
+        posX += Math.cos(angle) * velocity;
+        posY += Math.sin(angle) * velocity;
+        opacity = 1 - progress;
+        scale = 1 + progress * 0.5; // Particles grow slightly as they fade
+        
+        particle.style.left = posX + 'px';
+        particle.style.top = posY + 'px';
+        particle.style.opacity = opacity;
+        particle.style.transform = `translate(-50%, -50%) scale(${scale})`;
+        
+        requestAnimationFrame(animate);
+      };
+      
+      animate();
+    }
+  }
+  
+  // Clean up particles if they somehow get stuck
+  setInterval(() => {
+    const particles = document.querySelectorAll('.particle');
+    particles.forEach(particle => {
+      if (parseFloat(particle.style.opacity) <= 0.01) {
+        particle.remove();
+      }
+    });
+  }, 5000);
+</script>
+<style>
+ body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #f6d365, #fda085);
+  font-family: 'Luckiest Guy', cursive;
+  overflow-x: hidden;
+}
+
+.container {
+  text-align: center;
+  color: #fff;
+  padding: 5vh 5vw;
+  position: relative;
+  z-index: 1;
+}
+
+h1 {
+  font-size: 8vw;
+  animation: floatText 2s ease-in-out infinite alternate;
+}
+
+h2 {
+  font-family: 'Pacifico', cursive;
+  font-size: 4vw;
+  margin-top: 0;
+}
+
+.message {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 1.8vw;
+  margin: 5vh auto;
+  width: 80%;
+  background: rgba(255,255,255,0.2);
+  padding: 4vw;
+  border-radius: 10px;
+  backdrop-filter: blur(10px);
+}
+
+.cake {
+  margin: 5vh auto;
+  width: 60vw;
+  max-width: 300px;
+}
+
+.cake-img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.3);
+  animation: floatCake 3s ease-in-out infinite;
+  transition: all 0.3s ease-in-out;
+}
+
+.cake-img:hover {
+  animation: wiggle 0.5s infinite;
+  box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.6), 0 0 50px 10px rgba(255, 0, 128, 0.5);
+}
+
+.btn {
+  background: #fff;
+  color: #f06;
+  font-family: 'Press Start 2P', cursive;
+  padding: 2vw 4vw;
+  font-size: 2vw;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
+  margin-top: 3vh;
+}
+
+.btn:hover {
+  background: #f06;
+  color: #fff;
+  transform: scale(1.1);
+  box-shadow: 0 0 20px 5px rgba(255, 255, 255, 0.6), 0 0 50px 10px rgba(255, 0, 128, 0.5);
+}
+
+.btn.playing {
+  animation: pulse 1s infinite;
+}
+
+.typewriter {
+  overflow: hidden;
+
+  white-space: nowrap;
+  margin: 1.5em auto;
+  letter-spacing: .1em;
+  width: 0;
+  animation: typing 5s steps(40, end), blink-caret 0.75s step-end infinite;
+  animation-fill-mode: forwards;
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+@keyframes blink-caret {
+  from, to { border-color: transparent }
+  50% { border-color: white; }
+}
+
+@keyframes floatText {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-15px); }
+}
+
+@keyframes floatCake {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+@keyframes wiggle {
+  0%, 100% { transform: rotate(0); }
+  25% { transform: rotate(2deg); }
+  50% { transform: rotate(-2deg); }
+  75% { transform: rotate(2deg); }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 #fff; }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 10px transparent; }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 transparent; }
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+@media (max-width: 600px) {
+  h1 {
+    font-size: 10vw;
+  }
+
+  h2 {
+    font-size: 6vw;
+  }
+
+  .message {
+    font-size: 2.8vw;
+    width: 90%;
+  }
+
+  .btn {
+    font-size: 3vw;
+    padding: 3vw 6vw;
+  }
+}
+</style>
+<body>
+<canvas id="c"></canvas>
+  <div class="container">
+    <h1>Happy B-Day!</h1>
+    <h2 style='color:red'>Time to celebrate!</h2>
+    <div class="message" id="messageBox">
+      <p class="typewriter" style="display: none;">Today is all about <span style='color:blue'>YOU!</span></p>
+      <p class="typewriter" style="display: none;">Wishing you infinite<br> <span style='color:red'>joy</span><br>and <span style='color:red'>zero stress!</span></p>
+      <p class="typewriter" style="display: none;">May your year <br>ahead shine brighter<br>than <br><span style='color:green'>candles on your cake!</span></p>
+	  <p class="typewriter" style="display: none;">Many many happy returns of the day <br>my dear <span style= 'color:red'>Bestfriend </span><p/>
+    </div>
+    <div class="cake">
+      <img src="https://i.ibb.co/Y4wZ3CcN/1745054675638.png" alt="Cake" class="cake-img">
+    </div>
+    <div>
+      <button class="btn" onclick='playM()'>Play Birthday Song</button>
+      <audio id="birthdayAudio" src="https://dl.dropbox.com/s/e93f5kxsmtankf3/Best%20Happy%20Birthday%20To%20You%20_%20Happy%20Birthday%20Songs%20Remix%202020%28M4A_128K%29_1.m4a?dl=0" type="audio/mp4"></audio>
+    </div>
+  </div>
+<script>
+function playM() {
+  const audio = document.getElementById("birthdayAudio");
+  const button = document.querySelector(".btn");
+  audio.play().then(() => {
+    button.classList.add("playing");
+  }).catch(error => {
+    console.log("Autoplay blocked:", error);
+  });
+}
+
+function showMessages() {
+  const messages = document.querySelectorAll(".message .typewriter");
+  let delay = 0;
+  messages.forEach((msg, i) => {
+    setTimeout(() => {
+      msg.style.display = "block";
+      msg.style.animation = "typing 5s steps(40, end) forwards, blink-caret 0.75s step-end infinite";
+    }, delay);
+    delay += 4000;
+  });
+}
+
+window.onload = () => {
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');
+  let confettis = [];
+
+  function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  window.addEventListener('resize', resizeCanvas);
+  resizeCanvas();
+
+  function createConfetti() {
+    for (let i = 0; i < 250; i++) {
+      confettis.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 6 + 2,
+        d: Math.random() * 1 + 1,
+        color: `hsl(${Math.random() * 360}, 100%, 70%)`
+      });
+    }
+  }
+
+  function drawConfetti() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    confettis.forEach(c => {
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, c.r, 0, Math.PI * 2);
+      ctx.fillStyle = c.color;
+      ctx.fill();
+    });
+    updateConfetti();
+  }
+
+  function updateConfetti() {
+    confettis.forEach(c => {
+      c.y += c.d;
+      if (c.y > canvas.height) {
+        c.y = 0;
+        c.x = Math.random() * canvas.width;
+      }
+    });
+  }
+
+  function startConfetti() {
+    createConfetti();
+    setInterval(drawConfetti, 10);
+  }
+
+  startConfetti();
+  showMessages();
+};
+</script>
+</body>
+</html>
